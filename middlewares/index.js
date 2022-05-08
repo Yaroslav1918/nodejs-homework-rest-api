@@ -1,7 +1,5 @@
-const contactsSchemaValidation = require("./contactsSchemaValidation");
-const controlWrapper = require("./controlWrapper");
+const auth = require("./auth");
 
 module.exports = {
-  contactsSchemaValidation,
-  controlWrapper,
+  auth
 };
