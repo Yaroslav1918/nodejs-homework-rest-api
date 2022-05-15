@@ -9,7 +9,7 @@ const userSchema = Schema(
     email: {
       type: String,
       required: true,
-      unquire: true,
+      unique: true,
       match: emailRegexp,
     },
     password: {
@@ -20,6 +20,10 @@ const userSchema = Schema(
     token: {
       type: String,
       default: null,
+    },
+    avatarURL: {
+      type: String,
+      required: true,
     },
   },
   { versionKey: false, timestamps: true }
