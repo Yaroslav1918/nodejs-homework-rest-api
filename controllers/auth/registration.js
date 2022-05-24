@@ -1,7 +1,8 @@
 const { User, schemas } = require("../../models/user");
-const createError = require("../../helpers/createError");
 const gravatar = require("gravatar");
 const bcrypt = require("bcryptjs");
+const { v4 } = require("uuid");
+const { sendMail, createError } = require("../../helpers");
 
 const registration = async (req, res) => {
   const { error } = schemas.signup.validate(req.body);
@@ -15,7 +16,19 @@ const registration = async (req, res) => {
   }
   const hashPassword = await bcrypt.hash(password, 10);
   const avatarURL = gravatar.url(email);
-  await User.create({ email, password: hashPassword, avatarURL });
+  const verificationToken = v4();
+  await User.create({
+    email,
+    password: hashPassword,
+    verificationToken,
+    avatarURL,
+  });
+  const mail = {
+    to: email,
+    subject: "Подтвеждение email",
+    html: `<a target="_blank" href='http://localhost:3038/api/users/${verificationToken}'>Нажмите чтобы подтвердить свой email</a>`,
+  };
+  await sendMail(mail);
   res.status(201).json({
     user: {
       email,
